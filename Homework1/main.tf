@@ -61,7 +61,23 @@ resource "aws_instance" "firstwhiskey" {
           volume_type           = "gp2"
   }
 
-  tags = merge(local.common_tags, { Name = "firstwhiskey" })
+ tags = merge(local.common_tags, { Name = "firstwhiskey" })
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install nginx -y",
+      "sudo service nginx start",
+      "sudo rm /usr/share/nginx/html/index.html",
+      "echo <html>
+<header><title>This is title</title></header>
+<body>
+Welcome to Grandpa's Whiskey
+</body>
+</html>
+ > /usr/share/nginx/html/index.html"
+    ]
+  }
+}
 
 
 resource "aws_instance" "secondwhiskey" {
@@ -91,9 +107,25 @@ resource "aws_instance" "secondwhiskey" {
 
   tags = merge(local.common_tags, { Name = "secondwhiskey" })
 
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install nginx -y",
+      "sudo service nginx start",
+      "sudo rm /usr/share/nginx/html/index.html",
+      "echo <html>
+<header><title>This is title</title></header>
+<body>
+Welcome to Grandpa's Whiskey
+</body>
+</html>
+ > /usr/share/nginx/html/index.html"
+    ]
+  }
+}
+
 resource "aws_security_group" "allow_ssh" {
   name        = "nginx"
-  description = "Allow ports for nginx"
+  description = "Allow ssh for nginx"
   vpc_id      = aws_default_vpc.default.id
 
   ingress {
