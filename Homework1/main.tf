@@ -90,3 +90,9 @@ resource "aws_instance" "secondwhiskey" {
   }
 
   tags = merge(local.common_tags, { Name = "secondwhiskey" })
+
+resource "aws_security_group" "allow_ssh" {
+  name        = "nginx"
+  description = "allow ssh to nginx"
+  vpc_id      = aws_default_vpc.default.id
+
